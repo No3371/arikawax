@@ -21,7 +21,7 @@ var BufferSize int = 128
 
 // TimeoutDetectionMiddleware is a middleware that logs a warning when an interaction takes longer than 4 seconds (Discord requires a response within 3 seconds)
 // Noted that this middleware at the moment uses a single state and goroutine, so it might not be thread safe.
-func TimeoutDetectionMiddleware[S any](e *gateway.InteractionCreateEvent, state *S, next ...Middleware[S]) error {
+func TimeoutDetectionMiddleware[S any](e *gateway.InteractionCreateEvent, state S, next ...Middleware[S]) error {
 	if tdmIn == nil {
 		tdmIn = make(chan ITokenRec, BufferSize)
 		tdmOut = make(chan string, BufferSize)

@@ -7,7 +7,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/gateway"
 )
 
-func LoggingMiddleware[S any](e *gateway.InteractionCreateEvent, state *S, next ...Middleware[S]) error {
+func LoggingMiddleware[S any](e *gateway.InteractionCreateEvent, state S, next ...Middleware[S]) error {
 	sender := int64(e.SenderID())
 	channelId := int64(e.ChannelID)
 

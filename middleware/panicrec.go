@@ -7,7 +7,7 @@ import (
 	"github.com/diamondburned/arikawa/v3/gateway"
 )
 
-func PanicRecoveryMiddleware[S any](e *gateway.InteractionCreateEvent, state *S, next ...Middleware[S]) error {
+func PanicRecoveryMiddleware[S any](e *gateway.InteractionCreateEvent, state S, next ...Middleware[S]) error {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Printf("PANIC: %+v\n%s", r, debug.Stack())
