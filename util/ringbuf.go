@@ -1,4 +1,4 @@
-package arikawax
+package util
 
 import "iter"
 

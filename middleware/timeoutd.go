@@ -1,48 +1,20 @@
-package arikawax
+package middleware
 
 import (
 	"log"
-	"runtime/debug"
 	"time"
 
+	"github.com/No3371/arikawax/util"
 	"github.com/diamondburned/arikawa/v3/discord"
 	"github.com/diamondburned/arikawa/v3/gateway"
 )
-
-type Middleware[S any] func(e *gateway.InteractionCreateEvent, state *S, next ...Middleware[S]) error
-
-func LoggingMiddleware[S any](e *gateway.InteractionCreateEvent, state *S, next ...Middleware[S]) error {
-	sender := int64(e.SenderID())
-	channelId := int64(e.ChannelID)
-
-	if len(next) > 0 {
-		t := time.Now()
-		log.Printf("-> %d in %d %v", sender, channelId, e.Data.InteractionType())
-		err := next[0](e, state, next[1:]...)
-		log.Printf("<- %d in %d %v %v", sender, channelId, e.Data.InteractionType(), time.Since(t))
-		return err
-	}
-	return nil
-}
-
-func PanicRecoveryMiddleware[S any](e *gateway.InteractionCreateEvent, state *S, next ...Middleware[S]) error {
-	defer func() {
-		if r := recover(); r != nil {
-			log.Printf("PANIC: %+v\n%s", r, debug.Stack())
-		}
-	}()
-	if len(next) > 0 {
-		return next[0](e, state, next[1:]...)
-	}
-	return nil
-}
 
 type ITokenRec struct {
 	Token string
 	Time  time.Time
 }
 
-var iTokenRB RingBuffer[ITokenRec]
+var iTokenRB util.RingBuffer[ITokenRec]
 var tdmIn chan ITokenRec
 var tdmOut chan string
 var BufferSize int = 128
